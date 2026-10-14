@@ -15,6 +15,7 @@ type TransactionFull = Transaction & {
 const columns: GridColDef[] = [
   { field: "title", headerName: "Title", flex: 1.5, minWidth: 200 },
   { field: "author", headerName: "Author", flex: 1, minWidth: 160 },
+  { field: "borrowed_by", headerName: "Borrowed By", flex: 1, minWidth: 160 },
   {
     field: "checked_out_at",
     headerName: "Days Out",
@@ -38,6 +39,7 @@ export default function BorrowedPage() {
       id: t.transaction_id,
       title: t.copy.book.title,
       author: t.copy.book.author ?? "-",
+      borrowed_by: `${t.user.first_name} ${t.user.last_name}`,
       checked_out_at: t.checked_out_at,
     }));
 
