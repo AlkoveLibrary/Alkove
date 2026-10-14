@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  user_id       String        @id @db.Uuid
+  email         String?       @unique
+  first_name    String
+  last_name     String
+  auth_id       String?       @unique
+  role_id       String        @db.Uuid
+  last_login    DateTime?
+  last_activity DateTime?
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  role          Role          @relation(fields: [role_id], references: [role_id])
+  Transaction   Transaction[]
+  BookRequest   BookRequest[]
+}
+
+model Role {
+  role_id    String   @id @db.Uuid
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  users      User[]
+}
+
+model Book {
+  book_id          String   @id @db.Uuid
+  title            String
+  author           String?
+  isbn             String?  @unique
+  cover_id         String?  @unique @db.Uuid
+  publication_year Int?
+  category         String?
+  genre            String?
+  page_count       Int?
+  description      String?
+  edition          String?
+  format           String?
+  edition_year     Int?
+  publisher        String?
+  dewey_decimal    String?
+  featured         Boolean  @default(false)
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  Copy             Copy[]
+
+  cover Cover? @relation(fields: [cover_id], references: [cover_id])
+}
+
+model Copy {
+  copy_id    String   @id @db.Uuid
+  book_id    String   @db.Uuid
+  condition  String?
+  notes      String?
+  location   String?
+  archived   Boolean @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  book       Book     @relation(fields: [book_id], references: [book_id])
+
+  Transaction Transaction[]
+}
+
+model Transaction {
+  transaction_id String    @id @db.Uuid
+  user_id        String    @db.Uuid
+  copy_id           String    @db.Uuid
+  held_at           DateTime?
+  hold_cancelled_at DateTime?
+  checked_out_at    DateTime?
+  checked_in_at     DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [user_id])
+  copy Copy @relation(fields: [copy_id], references: [copy_id])
+}
+
+model ErrorLog {
+  error_log_id String   @id @db.Uuid
+  ip_address   String
+  url          String
+  method       String?
+  user_agent   String
+  error        String
+  error_dump   String
+  type         String
+  created_at   DateTime @default(now())
+}
+
+model Cover {
+  cover_id             String   @id @db.Uuid
+  openlibrary_cover_id Int?
+  file_path            String
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+  book                 Book?
+}
+
+model MailLog {
+  mail_log_id String    @id @db.Uuid
+  to          String
+  subject     String
+  body        String
+  error       String?
+  sent_at     DateTime?
+  error_at    DateTime?
+  created_at  DateTime  @default(now())
+}
+
+model EventLog {
+  event_log_id String      @id @db.Uuid
+  event        String
+  type         String
+  action       EventAction
+  data         Json?
+  ip_address   String
+  user_agent   String
+  user_id      String?     @db.Uuid
+  created_at   DateTime    @default(now())
+}
+
+model BookRequest {
+  book_request_id String  @id @db.Uuid
+  user_id         String  @db.Uuid
+  title           String
+  author          String
+  notes           String?
+  archived        Boolean     @default(false)
+  created_at      DateTime    @default(now())
+
+  user User @relation(fields: [user_id], references: [user_id])
+}
+
+enum EventAction {
+  read
+  write
+}

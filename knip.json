@@ -1,0 +1,8 @@
+{
+  "ignoreIssues": {
+    "pocketbase/main.pb.js": ["files"],
+    "src/backend/provider/file/pocketbase.ts": ["files"],
+    "src/backend/provider/pocketbase-util.ts": ["exports"],
+    "src/schema/user.ts": ["duplicates"]
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  database:
+    image: postgres:18
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: alkove
+    ports:
+      - 5432:5432
