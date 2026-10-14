@@ -93,13 +93,13 @@ export default function About() {
                 Source
               </Typography>
               <Link
-                href="https://github.com"
+                href="https://github.com/AlkoveLibrary/Alkove"
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="body2"
                 sx={{ fontWeight: "medium" }}
               >
-                Coming soon
+                github.com/AlkoveLibrary/Alkove
               </Link>
             </Box>
             <Divider />
