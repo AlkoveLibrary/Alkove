@@ -3,6 +3,7 @@ import type { NextApiRequest } from "next";
 import { requestHandler } from "backend/request-handler";
 import { createBook, getBookByCoverId, getBookByISBN } from "backend/book";
 import { createCopies } from "backend/copy";
+import { getOrCreateOpenLibraryCover } from "backend/openlibrary";
 import { authenticateUser } from "backend/authenticate-user";
 import { validateBody } from "util/validate-body";
 import { validateRole } from "util/validate-role";
@@ -49,8 +50,21 @@ export default requestHandler({
         }
       }
     }
-    if (body.cover_id) {
-      const existingBookWithCover = await getBookByCoverId(body.cover_id);
+
+    const { copies, openlibrary_cover_id, ...bookData } = body;
+
+    if (!bookData.cover_id && openlibrary_cover_id) {
+      try {
+        const { cover } =
+          await getOrCreateOpenLibraryCover(openlibrary_cover_id);
+        bookData.cover_id = cover.cover_id;
+      } catch {
+        // Don't let an OpenLibrary failure block creating the book
+      }
+    }
+
+    if (bookData.cover_id) {
+      const existingBookWithCover = await getBookByCoverId(bookData.cover_id);
       if (existingBookWithCover) {
         throw new Error(ErrorType.CONFLICT, {
           cause: "A book with this cover already exists",
@@ -58,7 +72,6 @@ export default requestHandler({
       }
     }
 
-    const { copies, ...bookData } = body;
     // Store a blank ISBN as null so it does not collide on the unique index
     const book = await createBook({ ...bookData, isbn: isbn || null });
 

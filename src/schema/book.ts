@@ -52,6 +52,7 @@ export const createBookSchema: Schema<CreateBookParams> = object({
       },
     ),
   cover_id: string().optional(),
+  openlibrary_cover_id: number().integer().optional(),
   publication_year: number()
     .integer()
     .optional()

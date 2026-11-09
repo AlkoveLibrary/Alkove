@@ -1,3 +1,4 @@
+import { Box, CircularProgress } from "@mui/material";
 import ViewFullCoverDialog from "components/CoverDialog";
 import Image from "next/image";
 import { FC, useState } from "react";
@@ -7,6 +8,7 @@ export const CoverSmall: FC<{
   openLibraryId?: number;
 }> = ({ coverId, openLibraryId }) => {
   const [coverDialogOpen, setCoverDialogOpen] = useState(false);
+  const [settledUrl, setSettledUrl] = useState<string | null>(null);
 
   if (!coverId && !openLibraryId) {
     return null;
@@ -52,7 +54,23 @@ export const CoverSmall: FC<{
           width={300}
           height={500}
           unoptimized={!coverId}
+          onLoad={() => setSettledUrl(url)}
+          onError={() => setSettledUrl(url)}
         />
+        {settledUrl !== url && (
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
       </div>
     </>
   );

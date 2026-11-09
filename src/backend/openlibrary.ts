@@ -2,6 +2,8 @@ import { OpenLibraryEdition, OpenLibraryWork } from "types/openlibrary";
 import { getImage } from "util/get-image";
 import axios from "axios";
 import { ErrorType } from "constants/errors";
+import { createCover, getCoverByOpenlibraryCoverId } from "./cover";
+import { storeFile } from "./file";
 
 const openlibraryHeaders = {
   "User-Agent": process.env.OPENLIBRARY_USER_AGENT || "",
@@ -15,6 +17,21 @@ export async function fetchOpenLibraryCoverBuffer(
   const url = `https://covers.openlibrary.org/b/id/${coverId}-${size}.jpg?default=false`;
   const imageFile = await getImage(url, openlibraryHeaders);
   return imageFile;
+}
+
+export async function getOrCreateOpenLibraryCover(coverId: number) {
+  const cover = await getCoverByOpenlibraryCoverId(coverId);
+  if (cover) return { cover };
+
+  const image = await fetchOpenLibraryCoverBuffer(coverId).catch(() => null);
+  if (!image) {
+    throw new Error(ErrorType.NOT_FOUND, {
+      cause: "Cover not found in OpenLibrary",
+    });
+  }
+
+  const filename = await storeFile(image, "cache/", ".jpg");
+  return { cover: await createCover(coverId, filename), image };
 }
 
 export async function searchBooks(isbn: string) {
@@ -50,7 +67,7 @@ export async function searchBooks(isbn: string) {
       : undefined,
     publication_year: year,
     edition_year: year,
-    cover: ed.covers && ed.covers.length > 0 ? ed.covers[0] : undefined,
+    cover: ed.covers?.[0] ?? undefined,
     format: ed.physical_format,
     publisher: Array.isArray(ed.publishers)
       ? ed.publishers.join(", ")

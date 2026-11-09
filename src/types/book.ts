@@ -102,6 +102,7 @@ export type CreateBookParams = {
   isbn?: string | null;
   publication_year?: number | null;
   cover_id?: string;
+  openlibrary_cover_id?: number;
   format?: string;
   publisher?: string;
   page_count?: number | null;

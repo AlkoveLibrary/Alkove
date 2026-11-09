@@ -112,6 +112,9 @@ export default function CreateBook() {
         ...bookValues,
         isbn: no_isbn ? undefined : bookValues.isbn,
         cover_id: values.cover_id || undefined,
+        // Removing the cover sets cover_id to "", undefined means it hasn't loaded yet
+        openlibrary_cover_id:
+          values.cover_id === undefined ? selectedEdition?.cover : undefined,
       };
 
       await createBookRequest(nulledValues);

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FC, useState } from "react";
-import { Box, Card } from "@mui/material";
+import { Box, Card, CircularProgress } from "@mui/material";
 import ViewFullCoverDialog from "./CoverDialog";
 import { useMobileBreakpoint } from "hooks/useMobileBreakpoint";
 
@@ -9,6 +9,7 @@ export const CoverFull: FC<{
   openLibraryId?: number;
 }> = ({ coverId, openLibraryId }) => {
   const [open, setOpen] = useState(false);
+  const [settledUrl, setSettledUrl] = useState<string | null>(null);
 
   const isMobile = useMobileBreakpoint();
 
@@ -101,7 +102,23 @@ export const CoverFull: FC<{
             width={500}
             height={700}
             unoptimized={!coverId}
+            onLoad={() => setSettledUrl(url)}
+            onError={() => setSettledUrl(url)}
           />
+          {settledUrl !== url && (
+            <Box
+              sx={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                pointerEvents: "none",
+              }}
+            >
+              <CircularProgress />
+            </Box>
+          )}
         </div>
       </Card>
       <ViewFullCoverDialog

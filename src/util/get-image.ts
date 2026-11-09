@@ -7,6 +7,7 @@ export async function getImage(
   const response = await axios.get(url, {
     responseType: "arraybuffer",
     headers,
+    signal: AbortSignal.timeout(15000),
   });
   return Buffer.from(response.data);
 }

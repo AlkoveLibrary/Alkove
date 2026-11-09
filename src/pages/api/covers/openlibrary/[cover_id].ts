@@ -2,9 +2,8 @@ import { requestHandler } from "backend/request-handler";
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { ErrorType } from "constants/errors";
-import { fetchOpenLibraryCoverBuffer } from "backend/openlibrary";
-import { createCover, getCoverByOpenlibraryCoverId } from "backend/cover";
-import { retrieveFile, storeFile } from "backend/file";
+import { getOrCreateOpenLibraryCover } from "backend/openlibrary";
+import { retrieveFile } from "backend/file";
 import { createEventLog } from "util/create-event-log";
 import { EventAction } from "@prisma/client";
 import { authenticateUser } from "backend/authenticate-user";
@@ -46,49 +45,19 @@ export default requestHandler({
       });
     }
 
-    // Try to get the image from PocketBase
-    const cover = await getCoverByOpenlibraryCoverId(coverIdInt);
-    if (!cover) {
-      await createEventLog({
-        req,
-        event: "OpenLibrary cover fetch and store",
-        type: "cover",
-        action: EventAction.write,
-        user_id: user.user_id,
-        data: { cover_id },
-      });
-      // If not found, try OpenLibrary and upload
-      let openLibraryCover = null;
-      try {
-        openLibraryCover = await fetchOpenLibraryCoverBuffer(cover_id);
-      } catch (error) {
-        if ((error as { status?: number })?.status === 404)
-          throw new Error(ErrorType.NOT_FOUND, {
-            cause: "Cover not found in OpenLibrary",
-          });
-      }
-      if (!openLibraryCover) {
-        throw new Error(ErrorType.NOT_FOUND, {
-          cause: "Cover not found in OpenLibrary",
-        });
-      }
+    const { cover, image } = await getOrCreateOpenLibraryCover(coverIdInt);
 
-      const filepath = "cache/";
-      const filename = await storeFile(openLibraryCover, filepath, ".jpg");
-      await createCover(coverIdInt, filename);
-      sendFile(openLibraryCover, cover_id, res);
-    } else {
-      await createEventLog({
-        req,
-        event: "OpenLibrary cover served from cache",
-        type: "cover",
-        action: EventAction.read,
-        user_id: user.user_id,
-        data: { cover_id },
-      });
+    await createEventLog({
+      req,
+      event: image
+        ? "OpenLibrary cover fetch and store"
+        : "OpenLibrary cover served from cache",
+      type: "cover",
+      action: image ? EventAction.write : EventAction.read,
+      user_id: user.user_id,
+      data: { cover_id },
+    });
 
-      const imageResult = await retrieveFile(cover.file_path);
-      sendFile(imageResult, cover_id, res);
-    }
+    sendFile(image ?? (await retrieveFile(cover.file_path)), cover_id, res);
   },
 });
