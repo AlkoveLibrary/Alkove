@@ -14,6 +14,7 @@ import {
   TransactionsByAuthor,
   TransactionsPerWeek,
   BooksByAuthor,
+  BooksByPopularity,
 } from "types/book";
 import BooksPerYearChart from "components/chart/BooksPerYearChart";
 import BooksByGenreChart from "components/chart/BooksByGenreChart";
@@ -22,6 +23,7 @@ import TransactionsByGenreChart from "components/chart/TransactionsByGenreChart"
 import TransactionsByAuthorChart from "components/chart/TransactionsByAuthorChart";
 import TransactionsByWeekChart from "components/chart/TransactionsByWeekChart";
 import BooksByAuthorChart from "components/chart/BooksByAuthorChart";
+import BooksByPopularityTable from "components/chart/BooksByPopularityTable";
 
 export default function Stats() {
   const router = useRouter();
@@ -35,6 +37,7 @@ export default function Stats() {
     transactionsByAuthor: TransactionsByAuthor;
     transactionsPerWeek: TransactionsPerWeek;
     booksByAuthor: BooksByAuthor;
+    booksByPopularity: BooksByPopularity;
   }>("staff/stats");
 
   const genreColors = new Map<string, string>();
@@ -84,6 +87,7 @@ export default function Stats() {
               data={data.booksPerInterval}
               booksWithYearCount={data.booksWithYearCount}
             />
+            <BooksByPopularityTable data={data.booksByPopularity} />
             <BooksByGenreChart
               data={data.booksByGenre}
               genreColors={genreColors}

@@ -153,6 +153,13 @@ export type BooksByAuthor = {
   percentage: number;
 }[];
 
+export type BooksByPopularity = {
+  book_id: string;
+  title: string;
+  author: string;
+  count: number;
+}[];
+
 export type TransactionsPerWeek = {
   week: string;
   count: number;

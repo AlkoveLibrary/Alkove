@@ -12,6 +12,7 @@ import {
   TransactionsByAuthor,
   TransactionsPerWeek,
   BooksByAuthor,
+  BooksByPopularity,
 } from "types/book";
 import { createEventLog } from "util/create-event-log";
 import { EventAction } from "@prisma/client";
@@ -131,6 +132,16 @@ export default requestHandler({
           : 0,
     }));
 
+    const booksByPopularity: BooksByPopularity = booksWithTransactionCount
+      .filter((book) => book.transactionCount > 0)
+      .map(({ book_id, title, author, transactionCount }) => ({
+        book_id,
+        title,
+        author: author?.trim() || NO_AUTHOR_LABEL,
+        count: transactionCount,
+      }))
+      .sort((a, b) => b.count - a.count || a.title.localeCompare(b.title));
+
     const transactions = await getAllTransactions();
     const borrows = transactions.filter(
       (transaction) => transaction.checked_out_at,
@@ -226,6 +237,7 @@ export default requestHandler({
       transactionsByAuthor,
       transactionsPerWeek,
       booksByAuthor,
+      booksByPopularity,
     };
   },
 });
