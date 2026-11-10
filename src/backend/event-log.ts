@@ -40,3 +40,18 @@ export const getEventLogs = async () => {
     orderBy: { created_at: "desc" },
   });
 };
+
+export const getEventLogsBetween = async (from: Date, to: Date) => {
+  const prisma = PrismaConnection;
+  return prisma.eventLog.findMany({
+    where: { created_at: { gte: from, lt: to } },
+    orderBy: { created_at: "desc" },
+    select: {
+      created_at: true,
+      event: true,
+      ip_address: true,
+      user_agent: true,
+      user_id: true,
+    },
+  });
+};

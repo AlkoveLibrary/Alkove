@@ -47,6 +47,7 @@ export const PAGES = {
     AUTH_LOGS: "/admin/logs/auth",
     MAIL_LOGS: "/admin/logs/mail",
     EVENT_LOGS: "/admin/logs/event",
+    ANALYTICS: "/admin/analytics",
   },
 
   WEB_ACCESS: {

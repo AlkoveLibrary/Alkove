@@ -108,6 +108,14 @@ export default function Home() {
           variant="outlined"
           size="large"
           sx={{ width: 240 }}
+          onClick={() => router.push(PAGES.ADMIN.ANALYTICS)}
+        >
+          Usage Analytics
+        </Button>
+        <Button
+          variant="outlined"
+          size="large"
+          sx={{ width: 240 }}
           onClick={() => router.push(PAGES.STAFF.HOME)}
         >
           Staff Dashboard
