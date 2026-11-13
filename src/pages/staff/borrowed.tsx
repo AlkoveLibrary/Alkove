@@ -7,6 +7,7 @@ import useSWR from "swr";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
 import { BookTitle } from "components/BookTitle";
+import { PAGES } from "constants/pages";
 
 type TransactionFull = Transaction & {
   user: User;
@@ -46,6 +47,7 @@ export default function BorrowedPage() {
     .filter((t) => t.checked_out_at && !t.checked_in_at)
     .map((t) => ({
       id: t.transaction_id,
+      book_id: t.copy.book.book_id,
       title: t.copy.book.title,
       subtitle: t.copy.book.subtitle,
       author: t.copy.book.author ?? "-",
@@ -71,6 +73,15 @@ export default function BorrowedPage() {
           rows={rows}
           columns={columns}
           loading={isLoading}
+          onRowClick={(params) =>
+            router.push(
+              PAGES.STAFF.BOOKS.BOOK.HOME.replace(
+                "[book_id]",
+                params.row.book_id,
+              ),
+            )
+          }
+          sx={{ cursor: "pointer" }}
           initialState={{
             pagination: { paginationModel: { pageSize: 10, page: 0 } },
             sorting: { sortModel: [{ field: "checked_out_at", sort: "desc" }] },
