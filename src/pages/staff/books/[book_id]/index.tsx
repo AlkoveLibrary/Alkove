@@ -223,13 +223,25 @@ export default function BookDetailPage() {
                     sx={{ flexShrink: 0, mt: 0.5, fontSize: 36 }}
                   />
                 )}
-                <Typography
-                  variant="h4"
-                  sx={{ fontWeight: "bold" }}
-                  gutterBottom
-                >
-                  {book.title}
-                </Typography>
+                <Box>
+                  <Typography
+                    variant="h4"
+                    sx={{ fontWeight: "bold" }}
+                    gutterBottom={!book.subtitle}
+                  >
+                    {book.title}
+                  </Typography>
+                  {book.subtitle && (
+                    <Typography
+                      variant="h5"
+                      color="text.secondary"
+                      sx={{ opacity: 0.7, fontStyle: "italic" }}
+                      gutterBottom
+                    >
+                      {book.subtitle}
+                    </Typography>
+                  )}
+                </Box>
               </Box>
               <Box
                 sx={{

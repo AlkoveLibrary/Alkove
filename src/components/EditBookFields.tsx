@@ -153,6 +153,20 @@ export const EditBookFields = ({
           </Grid>
           <Grid size={12}>
             <TextField
+              name="subtitle"
+              label="Subtitle"
+              value={values.subtitle ?? ""}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.subtitle && !!errors.subtitle}
+              helperText={touched.subtitle && errors.subtitle}
+              variant="outlined"
+              size="small"
+              fullWidth
+            />
+          </Grid>
+          <Grid size={12}>
+            <TextField
               name={"author"}
               label={"Author"}
               value={values.author}

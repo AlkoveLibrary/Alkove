@@ -1,13 +1,22 @@
 import { Card, CardContent, Typography, useTheme } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { BooksByPopularity } from "types/book";
+import { BookTitle } from "components/BookTitle";
 
 interface BooksByPopularityTableProps {
   data: BooksByPopularity;
 }
 
 const columns: GridColDef[] = [
-  { field: "title", headerName: "Book Name", flex: 1.5, minWidth: 200 },
+  {
+    field: "title",
+    headerName: "Book Name",
+    flex: 1.5,
+    minWidth: 200,
+    renderCell: ({ row }) => (
+      <BookTitle title={row.title} subtitle={row.subtitle} />
+    ),
+  },
   { field: "author", headerName: "Author", flex: 1, minWidth: 160 },
   {
     field: "count",

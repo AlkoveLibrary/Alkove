@@ -37,6 +37,7 @@ model Role {
 model Book {
   book_id          String   @id @db.Uuid
   title            String
+  subtitle         String?
   author           String?
   isbn             String?  @unique
   cover_id         String?  @unique @db.Uuid

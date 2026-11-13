@@ -16,6 +16,7 @@ import { BookWithCount, BookWithCountOpac } from "types/book";
 import { useMobileBreakpoint } from "hooks/useMobileBreakpoint";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { BookTitle } from "components/BookTitle";
 
 export default function BooksPage() {
   const router = useRouter();
@@ -29,7 +30,15 @@ export default function BooksPage() {
     const t = filterTitle.trim().toLowerCase();
     const a = filterAuthor.trim().toLowerCase();
     const y = filterYear.trim();
-    if (t && !b.title.toLowerCase().includes(t)) return false;
+    if (
+      t &&
+      ![b.title, b.subtitle]
+        .filter(Boolean)
+        .join(": ")
+        .toLowerCase()
+        .includes(t)
+    )
+      return false;
     if (a && !(b.author ?? "").toLowerCase().includes(a)) return false;
     if (y && !String(b.edition_year ?? "").startsWith(y)) return false;
     return true;
@@ -37,7 +46,14 @@ export default function BooksPage() {
   const isMobile = useMobileBreakpoint();
 
   const columns: GridColDef<BookWithCountOpac>[] = [
-    { field: "title", headerName: "Title", flex: 1 },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 1,
+      renderCell: ({ row }) => (
+        <BookTitle title={row.title} subtitle={row.subtitle} />
+      ),
+    },
     {
       field: "author",
       headerName: "Author",

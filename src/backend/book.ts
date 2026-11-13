@@ -52,6 +52,7 @@ export const getAllBooksWithCopyCount = async () => {
     select: {
       book_id: true,
       title: true,
+      subtitle: true,
       author: true,
       isbn: true,
       edition_year: true,
@@ -102,6 +103,7 @@ export const getAllBooksWithCover = async () => {
     select: {
       book_id: true,
       title: true,
+      subtitle: true,
       isbn: true,
       created_at: true,
       cover_id: true,
@@ -124,6 +126,7 @@ export const getAllBooksWithCopyCountOpac = async () => {
     select: {
       book_id: true,
       title: true,
+      subtitle: true,
       author: true,
       edition_year: true,
       genre: true,

@@ -18,6 +18,7 @@ import { BookWithCover } from "types/book";
 import { formatDate } from "util/format-date";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { BookTitle } from "components/BookTitle";
 
 type BookTableRow = BookWithCover & { id: string };
 
@@ -32,14 +33,30 @@ export default function BooksPage() {
     .filter((b) => {
       const t = filterTitle.trim().toLowerCase();
       const i = filterIsbn.trim().toLowerCase();
-      if (t && !b.title.toLowerCase().includes(t)) return false;
+      if (
+        t &&
+        ![b.title, b.subtitle]
+          .filter(Boolean)
+          .join(": ")
+          .toLowerCase()
+          .includes(t)
+      )
+        return false;
       if (i && !(b.isbn ?? "").toLowerCase().includes(i)) return false;
       return true;
     })
     .map((b) => ({ ...b, id: b.book_id }));
 
   const columns: GridColDef<BookTableRow>[] = [
-    { field: "title", headerName: "Title", flex: 2, minWidth: 180 },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 2,
+      minWidth: 180,
+      renderCell: ({ row }) => (
+        <BookTitle title={row.title} subtitle={row.subtitle} />
+      ),
+    },
     {
       field: "isbn",
       headerName: "ISBN",

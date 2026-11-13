@@ -15,6 +15,7 @@ import { PAGES } from "constants/pages";
 import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
+import { BookTitle } from "components/BookTitle";
 import { BooksWithHistory } from "types/book";
 import { formatDate } from "util/format-date";
 import Head from "next/head";
@@ -198,7 +199,10 @@ export default function BooksPage() {
                       style={{ cursor: "pointer" }}
                     >
                       <TableCell component="th" scope="row">
-                        {getBook(row.copy_id)?.title ?? "Unknown Book"}
+                        <BookTitle
+                          title={getBook(row.copy_id)?.title ?? "Unknown Book"}
+                          subtitle={getBook(row.copy_id)?.subtitle}
+                        />
                       </TableCell>
                       <TableCell align="right">
                         {formatDate(row.checked_out_at, true)}

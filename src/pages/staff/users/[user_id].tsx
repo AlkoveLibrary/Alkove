@@ -23,6 +23,7 @@ import { Book, Copy, Role, Transaction, User } from "@prisma/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import useSWR from "swr";
+import { BookTitle } from "components/BookTitle";
 import { useSnackbar } from "notistack";
 import { withSnackbar } from "util/snackbar-request";
 import {
@@ -281,7 +282,12 @@ export default function UserDetailPage() {
               ) : (
                 user.Transaction.map((tx) => (
                   <TableRow key={tx.transaction_id}>
-                    <TableCell>{tx.copy.book.title}</TableCell>
+                    <TableCell>
+                      <BookTitle
+                        title={tx.copy.book.title}
+                        subtitle={tx.copy.book.subtitle}
+                      />
+                    </TableCell>
                     <TableCell>
                       {tx.checked_in_at ? (
                         <Chip label="Returned" size="small" color="success" />

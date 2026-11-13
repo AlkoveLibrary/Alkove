@@ -50,6 +50,7 @@ export type BookWithCountOpac = Pick<
   BookWithCount,
   | "book_id"
   | "title"
+  | "subtitle"
   | "author"
   | "count"
   | "availableCount"
@@ -80,6 +81,7 @@ export type BookResult = Pick<
   Book,
   | "book_id"
   | "title"
+  | "subtitle"
   | "author"
   | "isbn"
   | "edition_year"
@@ -93,7 +95,7 @@ export type BookResult = Pick<
 
 export type BookWithCover = Pick<
   Book,
-  "book_id" | "title" | "isbn" | "created_at" | "cover_id"
+  "book_id" | "title" | "subtitle" | "isbn" | "created_at" | "cover_id"
 > & {
   cover: Pick<
     Cover,
@@ -115,6 +117,7 @@ export type CreateCopyParams = {
 
 export type CreateBookParams = {
   title: string;
+  subtitle?: string;
   author?: string;
   isbn?: string | null;
   publication_year?: number | null;
@@ -173,6 +176,7 @@ export type BooksByAuthor = {
 export type BooksByPopularity = {
   book_id: string;
   title: string;
+  subtitle: string | null;
   author: string;
   count: number;
 }[];

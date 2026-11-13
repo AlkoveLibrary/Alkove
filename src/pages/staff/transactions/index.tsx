@@ -51,7 +51,12 @@ export default function TransactionPage() {
         !author.trim() ||
         (book.author?.toLowerCase().includes(author.toLowerCase()) ?? false);
       const titleMatch =
-        !title.trim() || book.title.toLowerCase().includes(title.toLowerCase());
+        !title.trim() ||
+        [book.title, book.subtitle]
+          .filter(Boolean)
+          .join(": ")
+          .toLowerCase()
+          .includes(title.toLowerCase());
       return isbnMatch && authorMatch && titleMatch;
     });
   }, [isbn, author, title, allBooks]);

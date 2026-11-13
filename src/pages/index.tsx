@@ -30,6 +30,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import useSWR from "swr";
+import { BookTitle } from "components/BookTitle";
 import { OpacHomepage } from "types/book";
 
 const SEARCH_PAGE_SIZE = 5;
@@ -71,8 +72,11 @@ export default function HomePage() {
     if (!q) return [];
     return books.filter(
       (book) =>
-        book.title.toLowerCase().includes(q) ||
-        (book.author ?? "").toLowerCase().includes(q),
+        [book.title, book.subtitle]
+          .filter(Boolean)
+          .join(": ")
+          .toLowerCase()
+          .includes(q) || (book.author ?? "").toLowerCase().includes(q),
     );
   }, [books, query]);
 
@@ -269,7 +273,10 @@ export default function HomePage() {
                           </Box>
                           <Box sx={{ minWidth: 0 }}>
                             <Typography variant="body2" noWrap>
-                              {book.title}
+                              <BookTitle
+                                title={book.title}
+                                subtitle={book.subtitle}
+                              />
                             </Typography>
                             <Typography
                               variant="caption"

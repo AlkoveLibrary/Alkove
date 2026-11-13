@@ -17,6 +17,7 @@ import BarcodeScannerButton from "components/BarcodeScannerButton";
 import { BookResult } from "types/book";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { BookTitle } from "components/BookTitle";
 
 export default function BooksPage() {
   const router = useRouter();
@@ -32,7 +33,15 @@ export default function BooksPage() {
     const a = filterAuthor.trim().toLowerCase();
     const i = filterIsbn.trim().toLowerCase();
     const y = filterYear.trim();
-    if (t && !b.title.toLowerCase().includes(t)) return false;
+    if (
+      t &&
+      ![b.title, b.subtitle]
+        .filter(Boolean)
+        .join(": ")
+        .toLowerCase()
+        .includes(t)
+    )
+      return false;
     if (a && !(b.author ?? "").toLowerCase().includes(a)) return false;
     if (i && !(b.isbn ?? "").toLowerCase().includes(i)) return false;
     if (y && !String(b.edition_year ?? b.publication_year ?? "").startsWith(y))
@@ -41,7 +50,15 @@ export default function BooksPage() {
   });
 
   const columns: GridColDef<BookResult>[] = [
-    { field: "title", headerName: "Title", flex: 2, minWidth: 180 },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 2,
+      minWidth: 180,
+      renderCell: ({ row }) => (
+        <BookTitle title={row.title} subtitle={row.subtitle} />
+      ),
+    },
     {
       field: "author",
       headerName: "Author",

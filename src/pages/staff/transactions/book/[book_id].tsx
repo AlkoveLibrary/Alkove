@@ -532,6 +532,15 @@ export default function BookDetailPage() {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {book.title}
               </Typography>
+              {book.subtitle && (
+                <Typography
+                  variant="subtitle1"
+                  color="text.secondary"
+                  sx={{ opacity: 0.7, fontStyle: "italic" }}
+                >
+                  {book.subtitle}
+                </Typography>
+              )}
               {book.author && (
                 <Typography variant="body1" color="text.secondary">
                   {book.author}
@@ -568,6 +577,15 @@ export default function BookDetailPage() {
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {book.title}
               </Typography>
+              {book.subtitle && (
+                <Typography
+                  variant="subtitle1"
+                  color="text.secondary"
+                  sx={{ opacity: 0.7, fontStyle: "italic" }}
+                >
+                  {book.subtitle}
+                </Typography>
+              )}
               {book.author && (
                 <Typography variant="body1" color="text.secondary">
                   {book.author}
@@ -623,9 +641,7 @@ export default function BookDetailPage() {
             ) : (
               <Grid container spacing={2}>
                 {copies.map((copy) => {
-                  const borrow = copy.Transaction.find(
-                    (t) => t.checked_out_at,
-                  );
+                  const borrow = copy.Transaction.find((t) => t.checked_out_at);
                   const held = copy.Transaction.some((t) => !t.checked_out_at);
                   const available = !borrow;
                   const selectable = isCheckin

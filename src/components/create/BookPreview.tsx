@@ -18,6 +18,11 @@ export function BookPreview({ selectedBook, work }: BookPreviewProps) {
       <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
         {selectedBook.title}
       </Typography>
+      {selectedBook.subtitle && (
+        <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 1 }}>
+          {selectedBook.subtitle}
+        </Typography>
+      )}
       {typeof work !== "undefined" && work.author && work.author.length > 0 && (
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           <strong>Author:</strong> {work.author.join(", ")}

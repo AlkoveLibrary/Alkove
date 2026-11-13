@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { BookTitle } from "components/BookTitle";
 
 type TransactionFull = Transaction & {
   user: User;
@@ -13,7 +14,15 @@ type TransactionFull = Transaction & {
 };
 
 const columns: GridColDef[] = [
-  { field: "title", headerName: "Title", flex: 1.5, minWidth: 200 },
+  {
+    field: "title",
+    headerName: "Title",
+    flex: 1.5,
+    minWidth: 200,
+    renderCell: ({ row }) => (
+      <BookTitle title={row.title} subtitle={row.subtitle} />
+    ),
+  },
   { field: "author", headerName: "Author", flex: 1, minWidth: 160 },
   { field: "borrowed_by", headerName: "Borrowed By", flex: 1, minWidth: 160 },
   {
@@ -38,6 +47,7 @@ export default function BorrowedPage() {
     .map((t) => ({
       id: t.transaction_id,
       title: t.copy.book.title,
+      subtitle: t.copy.book.subtitle,
       author: t.copy.book.author ?? "-",
       borrowed_by: `${t.user.first_name} ${t.user.last_name}`,
       checked_out_at: t.checked_out_at,

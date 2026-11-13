@@ -73,7 +73,11 @@ export default requestHandler({
     }
 
     // Store a blank ISBN as null so it does not collide on the unique index
-    const book = await createBook({ ...bookData, isbn: isbn || null });
+    const book = await createBook({
+      ...bookData,
+      subtitle: bookData.subtitle || null,
+      isbn: isbn || null,
+    });
 
     await createCopies(book.book_id, copies);
 

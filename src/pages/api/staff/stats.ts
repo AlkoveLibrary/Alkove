@@ -134,9 +134,10 @@ export default requestHandler({
 
     const booksByPopularity: BooksByPopularity = booksWithTransactionCount
       .filter((book) => book.transactionCount > 0)
-      .map(({ book_id, title, author, transactionCount }) => ({
+      .map(({ book_id, title, subtitle, author, transactionCount }) => ({
         book_id,
         title,
+        subtitle,
         author: author?.trim() || NO_AUTHOR_LABEL,
         count: transactionCount,
       }))

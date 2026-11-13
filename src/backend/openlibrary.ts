@@ -60,6 +60,7 @@ export async function searchBooks(isbn: string) {
     : undefined;
   const edition: OpenLibraryEdition = {
     title: ed.title,
+    subtitle: ed.subtitle,
     description: ed.description
       ? typeof ed.description === "string"
         ? ed.description

@@ -7,6 +7,7 @@ export type OpenLibraryWork = {
 
 export type OpenLibraryEdition = {
   title: string;
+  subtitle?: string;
   description?: string;
   cover?: number;
   format?: string;

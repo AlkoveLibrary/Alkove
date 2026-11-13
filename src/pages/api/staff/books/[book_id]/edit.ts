@@ -31,6 +31,7 @@ export default requestHandler({
 
     const updatedBook = await updateBook(bookId, {
       title: body.title,
+      subtitle: body.subtitle || null,
       author: body.author,
       // Store a blank ISBN as null so it does not collide on the unique index
       isbn: isbn || null,

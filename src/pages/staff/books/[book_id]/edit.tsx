@@ -125,6 +125,7 @@ export default function EditBookPage() {
         <Formik
           initialValues={{
             title: book.title,
+            subtitle: book.subtitle ?? "",
             author: book.author ?? undefined,
             isbn: book.isbn ?? "",
             publication_year: book.publication_year ?? undefined,

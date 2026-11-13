@@ -19,6 +19,7 @@ import { withSnackbar } from "util/snackbar-request";
 import { staffCancelHoldRequest } from "requests/copy";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { BookTitle } from "components/BookTitle";
 
 type HoldFull = Transaction & {
   user: User;
@@ -54,7 +55,15 @@ export default function HoldsPage() {
   };
 
   const columns: GridColDef[] = [
-    { field: "title", headerName: "Title", flex: 1.5, minWidth: 200 },
+    {
+      field: "title",
+      headerName: "Title",
+      flex: 1.5,
+      minWidth: 200,
+      renderCell: ({ row }) => (
+        <BookTitle title={row.title} subtitle={row.subtitle} />
+      ),
+    },
     { field: "author", headerName: "Author", flex: 1, minWidth: 160 },
     { field: "held_by", headerName: "Held By", flex: 1.5, minWidth: 200 },
     { field: "held_at", headerName: "Held On", flex: 1, minWidth: 160 },
@@ -87,6 +96,7 @@ export default function HoldsPage() {
     id: hold.transaction_id,
     book_id: hold.copy.book.book_id,
     title: hold.copy.book.title,
+    subtitle: hold.copy.book.subtitle,
     author: hold.copy.book.author ?? "-",
     held_by: `${hold.user.first_name} ${hold.user.last_name}`,
     held_at: formatDate(hold.held_at),
@@ -134,7 +144,10 @@ export default function HoldsPage() {
             </Box>
           </Box>
         </Dialog>
-        <IconButton onClick={() => router.push(PAGES.STAFF.HOME)} sx={{ mb: 2 }}>
+        <IconButton
+          onClick={() => router.push(PAGES.STAFF.HOME)}
+          sx={{ mb: 2 }}
+        >
           <ArrowBackIcon />
         </IconButton>
         <Typography variant="h5" sx={{ fontWeight: "bold" }} gutterBottom>

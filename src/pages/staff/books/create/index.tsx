@@ -201,6 +201,7 @@ export default function CreateBook() {
                     <CreateBookForm
                       initialValues={{
                         title: selectedEdition.title,
+                        subtitle: selectedEdition.subtitle ?? "",
                         author: work?.author?.length
                           ? work.author.join(", ")
                           : "",
@@ -247,6 +248,7 @@ export default function CreateBook() {
               <CreateBookForm
                 initialValues={{
                   title: "",
+                  subtitle: "",
                   author: "",
                   isbn: isbn,
                   publication_year: undefined,

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   CircularProgress,
   Divider,
   Grid,
@@ -7,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import EditIcon from "@mui/icons-material/Edit";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { CoverFull } from "components/CoverFull";
@@ -20,6 +22,8 @@ import AuthContext from "context/AuthContext";
 import { useSnackbar } from "notistack";
 import { withSnackbar } from "util/snackbar-request";
 import { cancelHoldRequest, placeHoldRequest } from "requests/copy";
+import { STAFF } from "constants/roles";
+import { PAGES } from "constants/pages";
 
 export default function BookDetailPage() {
   const router = useRouter();
@@ -90,14 +94,58 @@ export default function BookDetailPage() {
           </Grid>
 
           <Grid size={{ xs: 12, sm: 8 }}>
-            <Typography variant="h4" sx={{ fontWeight: "bold" }} gutterBottom>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: "bold" }}
+              gutterBottom={!book.subtitle}
+            >
               {book.title}
             </Typography>
-            {book.author && (
-              <Typography variant="h6" color="text.secondary" gutterBottom>
-                {book.author}
+            {book.subtitle && (
+              <Typography
+                variant="h5"
+                color="text.secondary"
+                sx={{ opacity: 0.7, fontStyle: "italic" }}
+                gutterBottom
+              >
+                {book.subtitle}
               </Typography>
             )}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 2,
+                mb: 2.5,
+              }}
+            >
+              {book.author ? (
+                <Typography variant="h6" color="text.secondary">
+                  {book.author}
+                </Typography>
+              ) : (
+                <Box />
+              )}
+              {user && STAFF.includes(user.role_id) && (
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={<EditIcon />}
+                  sx={{ flexShrink: 0 }}
+                  onClick={() =>
+                    router.push(
+                      PAGES.STAFF.BOOKS.BOOK.HOME.replace(
+                        "[book_id]",
+                        book.book_id,
+                      ),
+                    )
+                  }
+                >
+                  View as Staff
+                </Button>
+              )}
+            </Box>
             <BookDetailsTable book={book} />
             <Divider sx={{ mb: 3 }} />
 

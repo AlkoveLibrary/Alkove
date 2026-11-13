@@ -61,6 +61,7 @@ export const createBookSchema: Schema<CreateBookParams> = object({
     .max(new Date().getFullYear() + 1, `Edition year cannot be in the future`),
   format: string().optional(),
   publisher: string().optional(),
+  subtitle: string().optional(),
   page_count: number()
     .integer()
     .optional()
@@ -116,6 +117,7 @@ export const editBookSchema: Schema<EditBookParams> = object({
     .max(new Date().getFullYear() + 1, `Edition year cannot be in the future`),
   format: string().optional(),
   publisher: string().optional(),
+  subtitle: string().optional(),
   page_count: number()
     .integer()
     .optional()

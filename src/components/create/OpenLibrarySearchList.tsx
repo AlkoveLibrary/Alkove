@@ -31,6 +31,11 @@ export default function SearchResultsList({
             <Typography variant="subtitle2" sx={{ fontWeight: "bold" }}>
               {edition.title}
             </Typography>
+            {edition.subtitle && (
+              <Typography variant="body2" color="text.secondary">
+                {edition.subtitle}
+              </Typography>
+            )}
             {edition.edition && (
               <Typography variant="body2" color="text.secondary">
                 Edition: {edition.edition}

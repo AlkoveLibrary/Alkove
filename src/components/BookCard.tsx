@@ -21,7 +21,8 @@ export const BookCard: FC<{
   return (
     <Card
       sx={{
-        height: "400px",
+        minHeight: "400px",
+        height: "100%",
         display: "flex",
         flexDirection: "column",
         position: "relative",
@@ -69,10 +70,20 @@ export const BookCard: FC<{
           <Typography
             variant="subtitle1"
             sx={{ fontWeight: "bold" }}
-            gutterBottom
+            gutterBottom={!book.subtitle}
           >
             {book.title}
           </Typography>
+          {book.subtitle && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ opacity: 0.7, fontStyle: "italic" }}
+              gutterBottom
+            >
+              {book.subtitle}
+            </Typography>
+          )}
           {book.author && (
             <Typography variant="body2" color="text.secondary" gutterBottom>
               {book.author}
