@@ -14,7 +14,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { PAGES } from "constants/pages";
 import BarcodeScannerButton from "components/BarcodeScannerButton";
-import { BookWithCount, BookWithCover } from "types/book";
+import { BookWithCover } from "types/book";
 import { formatDate } from "util/format-date";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
@@ -171,7 +171,7 @@ export default function BooksPage() {
           <DataGrid
             rows={rows}
             columns={columns}
-            onRowClick={(params: GridRowParams<BookWithCount>) =>
+            onRowClick={(params: GridRowParams<BookTableRow>) =>
               router.push(
                 PAGES.STAFF.BOOKS.BOOK.HOME.replace(
                   "[book_id]",

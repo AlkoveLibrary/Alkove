@@ -49,7 +49,14 @@ export const getAllBooksWithCopyCount = async () => {
   const prisma = PrismaConnection;
 
   const books = await prisma.book.findMany({
-    include: {
+    select: {
+      book_id: true,
+      title: true,
+      author: true,
+      isbn: true,
+      edition_year: true,
+      publication_year: true,
+      cover_id: true,
       _count: { select: { Copy: { where: { archived: false } } } },
       Copy: {
         where: { archived: false },
@@ -92,8 +99,19 @@ export const getAllBooksWithCover = async () => {
   const prisma = PrismaConnection;
 
   const books = await prisma.book.findMany({
-    include: {
-      cover: true,
+    select: {
+      book_id: true,
+      title: true,
+      isbn: true,
+      created_at: true,
+      cover_id: true,
+      cover: {
+        select: {
+          file_path: true,
+          openlibrary_cover_id: true,
+          created_at: true,
+        },
+      },
     },
   });
   return books;

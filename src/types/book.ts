@@ -76,13 +76,30 @@ export interface KpiData {
   bookRequests: number;
 }
 
-export type BookResult = Book & {
+export type BookResult = Pick<
+  Book,
+  | "book_id"
+  | "title"
+  | "author"
+  | "isbn"
+  | "edition_year"
+  | "publication_year"
+  | "cover_id"
+> & {
   count: number;
   availableCount: number;
   heldCount: number;
 };
 
-export type BookWithCover = Book & { cover: Cover | null };
+export type BookWithCover = Pick<
+  Book,
+  "book_id" | "title" | "isbn" | "created_at" | "cover_id"
+> & {
+  cover: Pick<
+    Cover,
+    "file_path" | "openlibrary_cover_id" | "created_at"
+  > | null;
+};
 
 export type CreateBookRequestParams = {
   title: string;

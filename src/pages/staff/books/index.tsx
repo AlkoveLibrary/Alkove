@@ -14,13 +14,13 @@ import { useState } from "react";
 import useSWR from "swr";
 import { PAGES } from "constants/pages";
 import BarcodeScannerButton from "components/BarcodeScannerButton";
-import { BookWithCount } from "types/book";
+import { BookResult } from "types/book";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
 
 export default function BooksPage() {
   const router = useRouter();
-  const { data } = useSWR<{ books: BookWithCount[] }>("staff/books");
+  const { data } = useSWR<{ books: BookResult[] }>("staff/books");
 
   const [filterTitle, setFilterTitle] = useState("");
   const [filterAuthor, setFilterAuthor] = useState("");
@@ -40,7 +40,7 @@ export default function BooksPage() {
     return true;
   });
 
-  const columns: GridColDef<BookWithCount>[] = [
+  const columns: GridColDef<BookResult>[] = [
     { field: "title", headerName: "Title", flex: 2, minWidth: 180 },
     {
       field: "author",
@@ -171,7 +171,7 @@ export default function BooksPage() {
             rows={rows}
             columns={columns}
             getRowId={(row) => row.book_id}
-            onRowClick={(params: GridRowParams<BookWithCount>) =>
+            onRowClick={(params: GridRowParams<BookResult>) =>
               router.push(
                 PAGES.STAFF.BOOKS.BOOK.HOME.replace(
                   "[book_id]",
