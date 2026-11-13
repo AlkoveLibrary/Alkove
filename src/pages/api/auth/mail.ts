@@ -10,7 +10,6 @@ import {
   RESET_PASSWORD_EMAIL_TEMPLATE,
 } from "config/config";
 import { ErrorType } from "constants/errors";
-import { NextApiRequest } from "next";
 import { logErrorInternal } from "util/log-error-internal";
 import { sendMailWithLog } from "util/mail-with-log";
 import { validateLocalRequest } from "util/validate-local";
@@ -37,10 +36,8 @@ export default requestHandler({
 
     const user = await getUserByEmail(lowerCaseEmail);
     if (!user) {
-      const strippedKey = { ...req };
-      delete strippedKey.headers["x-api-key"];
       await logErrorInternal(
-        strippedKey as NextApiRequest,
+        req,
         new Error(
           `Failed to send email: No user found with email: ${lowerCaseEmail}`,
         ),

@@ -1,6 +1,11 @@
 import { authenticateUser } from "backend/authenticate-user";
 import { requestHandler } from "backend/request-handler";
-import { getAllUsers, createUser, getUserByEmail } from "backend/user";
+import {
+  getAllUsers,
+  createUser,
+  getUserByEmail,
+  deleteUser,
+} from "backend/user";
 import { ADMINISTRATOR_ONLY, ROLE_IDS } from "constants/roles";
 import { validateRole } from "util/validate-role";
 import { validateBody } from "util/validate-body";
@@ -39,6 +44,12 @@ export default requestHandler({
       adminCreateUserSchema,
     );
 
+    if (role_id === ROLE_IDS.USER) {
+      throw new Error(ErrorType.BAD_REQUEST, {
+        cause: "Role user cannot be created here",
+      });
+    }
+
     const lowerCaseEmail = email.toLowerCase();
 
     await createEventLog({
@@ -59,16 +70,6 @@ export default requestHandler({
       });
     }
 
-    if (role_id !== ROLE_IDS.USER) {
-      const enableMfa = MANDATORY_MFA_ROLES.includes(role_id);
-      await createAuthUser(
-        auth_id,
-        lowerCaseEmail,
-        first_name,
-        last_name,
-        enableMfa,
-      );
-    }
     const user = await createUser({
       first_name,
       last_name,
@@ -76,6 +77,20 @@ export default requestHandler({
       role_id,
       auth_id,
     });
+
+    const enableMfa = MANDATORY_MFA_ROLES.includes(role_id);
+    try {
+      await createAuthUser(
+        auth_id,
+        lowerCaseEmail,
+        first_name,
+        last_name,
+        enableMfa,
+      );
+    } catch (error) {
+      await deleteUser(user.user_id);
+      throw error;
+    }
 
     await createEventLog({
       req,
