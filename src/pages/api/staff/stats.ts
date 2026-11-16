@@ -128,13 +128,24 @@ export default requestHandler({
 
     const booksByPopularity: BooksByPopularity = booksWithTransactionCount
       .filter((book) => book.transactionCount > 0)
-      .map(({ book_id, title, subtitle, author, transactionCount }) => ({
-        book_id,
-        title,
-        subtitle,
-        author: author?.trim() || NO_AUTHOR_LABEL,
-        count: transactionCount,
-      }))
+      .map(
+        ({
+          book_id,
+          title,
+          subtitle,
+          author,
+          edition_year,
+          publication_year,
+          transactionCount,
+        }) => ({
+          book_id,
+          title,
+          subtitle,
+          author: author?.trim() || NO_AUTHOR_LABEL,
+          year: edition_year ?? publication_year,
+          count: transactionCount,
+        }),
+      )
       .sort((a, b) => b.count - a.count || a.title.localeCompare(b.title));
 
     const transactions = await getAllTransactions();

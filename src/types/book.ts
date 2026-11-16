@@ -179,6 +179,7 @@ export type BooksByPopularity = {
   title: string;
   subtitle: string | null;
   author: string;
+  year: number | null;
   count: number;
 }[];
 

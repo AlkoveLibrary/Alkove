@@ -21,6 +21,12 @@ const columns: GridColDef[] = [
   },
   { field: "author", headerName: "Author", flex: 1, minWidth: 160 },
   {
+    field: "year",
+    headerName: "Year",
+    width: 100,
+    valueFormatter: (value) => value ?? "",
+  },
+  {
     field: "count",
     headerName: "Times Checked Out",
     type: "number",
