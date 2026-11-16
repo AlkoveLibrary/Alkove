@@ -24,6 +24,9 @@ import { PAGES } from "constants/pages";
 import { ROLE_IDS } from "constants/roles";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import ExportCsvDialog from "components/ExportCsvDialog";
+import { USER_EXPORT_FIELDS } from "constants/export";
+import { exportUsersRequest } from "requests/user";
 
 export default function UsersPage() {
   const router = useRouter();
@@ -32,6 +35,7 @@ export default function UsersPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [open, setOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
   const [user, setUser] = useState<UserWithRole>();
 
   const filteredUsers = useMemo(() => {
@@ -78,6 +82,9 @@ export default function UsersPage() {
               onClick={() => router.push(PAGES.ADMIN.USERS.IMPORT)}
             >
               Bulk Import
+            </Button>
+            <Button variant="outlined" onClick={() => setExportOpen(true)}>
+              Export User Data
             </Button>
           </Box>
         </Box>
@@ -197,6 +204,15 @@ export default function UsersPage() {
           }}
           onCreated={mutate}
           user={user}
+        />
+        <ExportCsvDialog
+          open={exportOpen}
+          onClose={() => setExportOpen(false)}
+          title="Export User Data"
+          fileName="users"
+          fields={USER_EXPORT_FIELDS}
+          defaultSortBy="last_name"
+          exportRequest={exportUsersRequest}
         />
       </Box>
     </>

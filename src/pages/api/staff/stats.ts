@@ -61,12 +61,6 @@ export default requestHandler({
       intervalCounts.set(interval, (intervalCounts.get(interval) ?? 0) + 1);
     });
 
-    const booksPerInterval: BooksPerInterval = Array.from(
-      intervalCounts.entries(),
-    )
-      .map(([interval, count]) => ({ interval, count }))
-      .sort((a, b) => a.interval - b.interval);
-
     const allBooks = await getAllBooks();
 
     const genreCounts = new Map<string, number>();
@@ -147,6 +141,27 @@ export default requestHandler({
     const borrows = transactions.filter(
       (transaction) => transaction.checked_out_at,
     );
+
+    const transactionIntervalCounts = new Map<number, number>();
+    borrows.forEach(({ copy }) => {
+      const year = copy.book.edition_year ?? copy.book.publication_year;
+      if (year === null) return;
+      const interval = Math.floor(year / INTERVAL_YEARS) * INTERVAL_YEARS;
+      transactionIntervalCounts.set(
+        interval,
+        (transactionIntervalCounts.get(interval) ?? 0) + 1,
+      );
+    });
+
+    const booksPerInterval: BooksPerInterval = Array.from(
+      new Set([...intervalCounts.keys(), ...transactionIntervalCounts.keys()]),
+    )
+      .map((interval) => ({
+        interval,
+        count: intervalCounts.get(interval) ?? 0,
+        transactionCount: transactionIntervalCounts.get(interval) ?? 0,
+      }))
+      .sort((a, b) => a.interval - b.interval);
 
     const transactionGenreCounts = new Map<string, number>();
     borrows.forEach(({ copy }) => {

@@ -19,6 +19,9 @@ import { formatDate } from "util/format-date";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
 import { BookTitle } from "components/BookTitle";
+import ExportCsvDialog from "components/ExportCsvDialog";
+import { BOOK_EXPORT_FIELDS } from "constants/export";
+import { exportBooksRequest } from "requests/book";
 
 type BookTableRow = BookWithCover & { id: string };
 
@@ -28,6 +31,7 @@ export default function BooksPage() {
 
   const [filterTitle, setFilterTitle] = useState("");
   const [filterIsbn, setFilterIsbn] = useState("");
+  const [exportOpen, setExportOpen] = useState(false);
 
   const rows: BookTableRow[] = (data?.books ?? [])
     .filter((b) => {
@@ -143,6 +147,9 @@ export default function BooksPage() {
               Book Catalog
             </Typography>
             <Box sx={{ display: "flex", gap: 1 }}>
+              <Button variant="outlined" onClick={() => setExportOpen(true)}>
+                Export Book Data
+              </Button>
               <Button
                 variant="outlined"
                 onClick={() => router.push(PAGES.ADMIN.BOOKS.COVERS)}
@@ -200,6 +207,15 @@ export default function BooksPage() {
             pageSizeOptions={[25, 50, 100]}
             initialState={{ pagination: { paginationModel: { pageSize: 25 } } }}
             disableRowSelectionOnClick
+          />
+          <ExportCsvDialog
+            open={exportOpen}
+            onClose={() => setExportOpen(false)}
+            title="Export Book Data"
+            fileName="books"
+            fields={BOOK_EXPORT_FIELDS}
+            defaultSortBy="title"
+            exportRequest={exportBooksRequest}
           />
         </Box>
       </Box>

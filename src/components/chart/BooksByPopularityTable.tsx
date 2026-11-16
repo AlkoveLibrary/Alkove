@@ -2,6 +2,8 @@ import { Card, CardContent, Typography, useTheme } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { BooksByPopularity } from "types/book";
 import { BookTitle } from "components/BookTitle";
+import { useRouter } from "next/router";
+import { PAGES } from "constants/pages";
 
 interface BooksByPopularityTableProps {
   data: BooksByPopularity;
@@ -30,6 +32,7 @@ const BooksByPopularityTable: React.FC<BooksByPopularityTableProps> = ({
   data,
 }) => {
   const theme = useTheme();
+  const router = useRouter();
 
   return (
     <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
@@ -51,6 +54,15 @@ const BooksByPopularityTable: React.FC<BooksByPopularityTableProps> = ({
           }}
           pageSizeOptions={[5, 10, 25]}
           disableRowSelectionOnClick
+          onRowClick={(params) =>
+            router.push(
+              PAGES.STAFF.BOOKS.BOOK.HOME.replace(
+                "[book_id]",
+                params.row.book_id,
+              ),
+            )
+          }
+          sx={{ cursor: "pointer" }}
         />
       </CardContent>
     </Card>

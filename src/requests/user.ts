@@ -1,3 +1,4 @@
+import { SortDirection } from "constants/export";
 import {
   AdminCreateUserRequest,
   AdminUpdateUserResponse,
@@ -72,5 +73,18 @@ export const requestDeleteUser = async (user_id: string) => {
   const res = await axiosClient.delete<{ message: string }>(
     `staff/users/${user_id}`,
   );
+  return res.data;
+};
+
+export const exportUsersRequest = async (
+  fields: string[],
+  sort_by: string,
+  sort_direction: SortDirection,
+) => {
+  const res = await axiosClient.post<{ csv: string }>("admin/users/export", {
+    fields,
+    sort_by,
+    sort_direction,
+  });
   return res.data;
 };

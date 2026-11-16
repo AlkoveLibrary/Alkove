@@ -141,6 +141,7 @@ export type BookFormValues = CreateBookParams & { no_isbn?: boolean };
 export type BooksPerInterval = {
   interval: number;
   count: number;
+  transactionCount: number;
 }[];
 
 export type BooksByGenre = {

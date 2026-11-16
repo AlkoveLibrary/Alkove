@@ -1,3 +1,4 @@
+import { SortDirection } from "constants/export";
 import { axiosClient } from "util/axios";
 import { CreateBookParams, CreateBookRequestParams } from "types/book";
 
@@ -56,5 +57,17 @@ export const setFeaturedRequest = async (
   const response = await axiosClient.post(`staff/books/${book_id}/featured`, {
     featured,
   });
+  return response.data;
+};
+
+export const exportBooksRequest = async (
+  fields: string[],
+  sort_by: string,
+  sort_direction: SortDirection,
+) => {
+  const response = await axiosClient.post<{ csv: string }>(
+    "admin/books/export",
+    { fields, sort_by, sort_direction },
+  );
   return response.data;
 };

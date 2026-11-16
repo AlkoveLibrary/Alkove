@@ -321,3 +321,18 @@ export const getAllBooksForUser = async (user_id: string) => {
 
   return books;
 };
+
+export const getAllBooksForExport = async () => {
+  const prisma = PrismaConnection;
+
+  const books = await prisma.book.findMany({
+    include: {
+      _count: { select: { Copy: { where: { archived: false } } } },
+    },
+  });
+
+  return books.map(({ _count, ...book }) => ({
+    ...book,
+    copy_count: _count.Copy,
+  }));
+};
