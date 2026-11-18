@@ -1,10 +1,15 @@
 import { ExportField, SortDirection } from "constants/export";
 
-type CsvValue = string | number | boolean | Date | null | undefined;
+type CsvValue = string | string[] | number | boolean | Date | null | undefined;
 
 const escapeCsvValue = (value: CsvValue) => {
   if (value === null || value === undefined) return "";
-  const text = value instanceof Date ? value.toISOString() : String(value);
+  const text =
+    value instanceof Date
+      ? value.toISOString()
+      : Array.isArray(value)
+        ? value.join("; ")
+        : String(value);
   return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 };
 
@@ -22,6 +27,8 @@ export const toCsv = (
 const toComparable = (value: CsvValue) => {
   if (value instanceof Date) return value.getTime();
   if (typeof value === "boolean") return value ? 1 : 0;
+  if (Array.isArray(value))
+    return value.join("; ").trim().toLowerCase() || null;
   if (typeof value === "string") return value.trim().toLowerCase() || null;
   return value ?? null;
 };

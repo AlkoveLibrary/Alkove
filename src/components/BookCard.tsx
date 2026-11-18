@@ -12,6 +12,7 @@ import Image from "next/image";
 import router from "next/router";
 import { FC } from "react";
 import { Cover } from "./Cover";
+import { formatAuthors } from "util/format-authors";
 
 export const BookCard: FC<{
   book: Book;
@@ -84,9 +85,9 @@ export const BookCard: FC<{
               {book.subtitle}
             </Typography>
           )}
-          {book.author && (
+          {formatAuthors(book.authors) && (
             <Typography variant="body2" color="text.secondary" gutterBottom>
-              {book.author}
+              {formatAuthors(book.authors)}
             </Typography>
           )}
           {checkedOut && (

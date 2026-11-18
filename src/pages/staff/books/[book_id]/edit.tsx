@@ -22,6 +22,7 @@ import { PAGES } from "constants/pages";
 import { enqueueSnackbar } from "notistack";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { cleanAuthors } from "util/format-authors";
 
 export default function EditBookPage() {
   const router = useRouter();
@@ -126,7 +127,7 @@ export default function EditBookPage() {
           initialValues={{
             title: book.title,
             subtitle: book.subtitle ?? "",
-            author: book.author ?? undefined,
+            authors: book.authors,
             isbn: book.isbn ?? "",
             publication_year: book.publication_year ?? undefined,
             format: book.format ?? undefined,
@@ -140,7 +141,10 @@ export default function EditBookPage() {
           }}
           onSubmit={async (values) => {
             try {
-              await editBookRequest(book_id, values);
+              await editBookRequest(book_id, {
+                ...values,
+                authors: cleanAuthors(values.authors),
+              });
               router.push(
                 PAGES.STAFF.BOOKS.BOOK.HOME.replace("[book_id]", book_id),
               );

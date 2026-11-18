@@ -11,7 +11,7 @@ Alkove is an open source Library Management System with an Online Public Access 
 
 - Web Interface: Available through the browser, so staff and users can access through mobile, tablet, or desktop devices
 - Cataloging: Barcode scanner to read ISBN. Once ISBN is entered, details are pulled from openlibrary.org to automatically populate title, author, cover, and other metadata
-- Online Catalog: anyone can browse the book catalog and see featured, popular, and new titles 
+- Online Catalog: anyone can browse the book catalog and see featured, popular, and new titles
 - Checkout and Check-in: See availability and track what books are checked out by who
 - User Access: Users can optionally create an account and view what books they have checked out or can check books out with a local account. Email not required
 - Self-hosted and Open Source: Designed to run on your own machine, with ownership of the whole tech stack

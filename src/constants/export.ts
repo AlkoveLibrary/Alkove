@@ -7,7 +7,7 @@ export const BOOK_EXPORT_FIELDS = [
   { key: "book_id", label: "Book ID" },
   { key: "title", label: "Title" },
   { key: "subtitle", label: "Subtitle" },
-  { key: "author", label: "Author" },
+  { key: "authors", label: "Authors" },
   { key: "isbn", label: "ISBN" },
   { key: "publication_year", label: "Publication Year" },
   { key: "edition", label: "Edition" },

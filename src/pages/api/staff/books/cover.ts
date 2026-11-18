@@ -17,7 +17,7 @@ export default requestHandler({
   post: async (req) => {
     const user = await authenticateUser(req);
     validateRole(user, STAFF);
-    
+
     const file_path = await parseAndStoreImageUpload(req);
     const cover = await createUploadedCover(file_path);
 

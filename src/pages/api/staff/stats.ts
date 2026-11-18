@@ -16,12 +16,18 @@ import {
 } from "types/book";
 import { createEventLog } from "util/create-event-log";
 import { EventAction } from "@prisma/client";
+import { cleanAuthors, formatAuthors } from "util/format-authors";
 
 const INTERVAL_YEARS = 5;
 const NO_GENRE_LABEL = "No Genre";
 const NO_AUTHOR_LABEL = "No Author";
 const OTHER_AUTHOR_LABEL = "Other";
 const MAX_AUTHOR_SLICES = 15;
+
+const authorLabels = (authors: string[]) => {
+  const cleaned = cleanAuthors(authors);
+  return cleaned.length > 0 ? cleaned : [NO_AUTHOR_LABEL];
+};
 
 const getWeekStart = (date: Date) => {
   const weekStart = new Date(
@@ -80,9 +86,12 @@ export default requestHandler({
       .sort((a, b) => a.genre.localeCompare(b.genre));
 
     const bookAuthorCounts = new Map<string, number>();
-    allBooks.forEach(({ author }) => {
-      const label = author?.trim() || NO_AUTHOR_LABEL;
-      bookAuthorCounts.set(label, (bookAuthorCounts.get(label) ?? 0) + 1);
+    let totalBookAuthorCredits = 0;
+    allBooks.forEach(({ authors }) => {
+      authorLabels(authors).forEach((label) => {
+        bookAuthorCounts.set(label, (bookAuthorCounts.get(label) ?? 0) + 1);
+        totalBookAuthorCredits += 1;
+      });
     });
 
     const multiBookAuthorCounts = Array.from(bookAuthorCounts.entries()).filter(
@@ -102,7 +111,9 @@ export default requestHandler({
         author,
         count,
         percentage:
-          totalBooks > 0 ? Math.round((count / totalBooks) * 1000) / 10 : 0,
+          totalBookAuthorCredits > 0
+            ? Math.round((count / totalBookAuthorCredits) * 1000) / 10
+            : 0,
       }))
       .sort((a, b) => b.count - a.count);
 
@@ -133,7 +144,7 @@ export default requestHandler({
           book_id,
           title,
           subtitle,
-          author,
+          authors,
           edition_year,
           publication_year,
           transactionCount,
@@ -141,7 +152,7 @@ export default requestHandler({
           book_id,
           title,
           subtitle,
-          author: author?.trim() || NO_AUTHOR_LABEL,
+          author: formatAuthors(authors) || NO_AUTHOR_LABEL,
           year: edition_year ?? publication_year,
           count: transactionCount,
         }),
@@ -198,12 +209,15 @@ export default requestHandler({
       .sort((a, b) => a.genre.localeCompare(b.genre));
 
     const transactionAuthorCounts = new Map<string, number>();
+    let totalTransactionAuthorCredits = 0;
     borrows.forEach(({ copy }) => {
-      const label = copy.book.author?.trim() || NO_AUTHOR_LABEL;
-      transactionAuthorCounts.set(
-        label,
-        (transactionAuthorCounts.get(label) ?? 0) + 1,
-      );
+      authorLabels(copy.book.authors).forEach((label) => {
+        transactionAuthorCounts.set(
+          label,
+          (transactionAuthorCounts.get(label) ?? 0) + 1,
+        );
+        totalTransactionAuthorCredits += 1;
+      });
     });
 
     const sortedAuthorCounts = Array.from(
@@ -225,8 +239,8 @@ export default requestHandler({
         author,
         count,
         percentage:
-          totalTransactions > 0
-            ? Math.round((count / totalTransactions) * 1000) / 10
+          totalTransactionAuthorCredits > 0
+            ? Math.round((count / totalTransactionAuthorCredits) * 1000) / 10
             : 0,
       }),
     );

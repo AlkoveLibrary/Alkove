@@ -10,7 +10,7 @@ const openlibraryHeaders = {
   Accept: "application/json",
 };
 
-export async function fetchOpenLibraryCoverBuffer(
+async function fetchOpenLibraryCoverBuffer(
   coverId: string | number,
   size: "S" | "M" | "L" = "L",
 ) {
@@ -103,24 +103,26 @@ export async function searchBooks(isbn: string) {
       work = {
         title: workData.title,
         author: Array.isArray(workData.authors)
-          ? await Promise.all(
-              (workData.authors as OpenLibraryWorkAuthorRef[]).map(
-                async (a) => {
-                  if (a.author && a.author.key) {
-                    try {
-                      const authorResp = await axios.get(
-                        `https://openlibrary.org${a.author.key}.json`,
-                        { headers: openlibraryHeaders },
-                      );
-                      return authorResp.data.name;
-                    } catch {
-                      return "";
+          ? (
+              await Promise.all(
+                (workData.authors as OpenLibraryWorkAuthorRef[]).map(
+                  async (a) => {
+                    if (a.author && a.author.key) {
+                      try {
+                        const authorResp = await axios.get(
+                          `https://openlibrary.org${a.author.key}.json`,
+                          { headers: openlibraryHeaders },
+                        );
+                        return authorResp.data.name;
+                      } catch {
+                        return "";
+                      }
                     }
-                  }
-                  return "";
-                },
-              ),
-            )
+                    return "";
+                  },
+                ),
+              )
+            ).filter(Boolean)
           : [],
         publication_year,
         description: workData.description

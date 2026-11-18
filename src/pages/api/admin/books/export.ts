@@ -15,7 +15,10 @@ export default requestHandler({
     const user = await authenticateUser(req);
     validateRole(user, ADMINISTRATOR_ONLY);
 
-    const { fields, sort_by, sort_direction } = validateBody(req.body, bookExportSchema);
+    const { fields, sort_by, sort_direction } = validateBody(
+      req.body,
+      bookExportSchema,
+    );
 
     await createEventLog({
       req,
@@ -31,6 +34,8 @@ export default requestHandler({
       fields.includes(field.key),
     );
 
-    return { csv: toCsv(selectedFields, sortRows(books, sort_by, sort_direction)) };
+    return {
+      csv: toCsv(selectedFields, sortRows(books, sort_by, sort_direction)),
+    };
   },
 });

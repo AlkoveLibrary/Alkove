@@ -13,6 +13,7 @@ import { ErrorType } from "constants/errors";
 import { createEventLog } from "util/create-event-log";
 import { sanitizeIsbn, toIsbn10, toIsbn13 } from "util/validate-isbn";
 import { EventAction } from "@prisma/client";
+import { cleanAuthors } from "util/format-authors";
 
 export default requestHandler({
   post: async (req: NextApiRequest) => {
@@ -75,6 +76,7 @@ export default requestHandler({
     // Store a blank ISBN as null so it does not collide on the unique index
     const book = await createBook({
       ...bookData,
+      authors: cleanAuthors(bookData.authors),
       subtitle: bookData.subtitle || null,
       isbn: isbn || null,
     });

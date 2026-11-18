@@ -17,6 +17,7 @@ import { useMobileBreakpoint } from "hooks/useMobileBreakpoint";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
 import { BookTitle } from "components/BookTitle";
+import { formatAuthors } from "util/format-authors";
 
 export default function BooksPage() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function BooksPage() {
         .includes(t)
     )
       return false;
-    if (a && !(b.author ?? "").toLowerCase().includes(a)) return false;
+    if (a && !formatAuthors(b.authors).toLowerCase().includes(a)) return false;
     if (y && !String(b.edition_year ?? "").startsWith(y)) return false;
     return true;
   });
@@ -55,11 +56,11 @@ export default function BooksPage() {
       ),
     },
     {
-      field: "author",
+      field: "authors",
       headerName: "Author",
       flex: 1,
 
-      valueGetter: (value) => value ?? "-",
+      valueGetter: (value: string[]) => formatAuthors(value) || "-",
     },
     {
       field: "edition_year",

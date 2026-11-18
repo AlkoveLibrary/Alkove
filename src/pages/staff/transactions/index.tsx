@@ -22,6 +22,7 @@ import { Cover } from "components/Cover";
 import { BookResult } from "types/book";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { formatAuthors } from "util/format-authors";
 
 export default function TransactionPage() {
   const router = useRouter();
@@ -49,7 +50,9 @@ export default function TransactionPage() {
         (book.isbn?.toLowerCase().includes(isbn.toLowerCase()) ?? false);
       const authorMatch =
         !author.trim() ||
-        (book.author?.toLowerCase().includes(author.toLowerCase()) ?? false);
+        formatAuthors(book.authors)
+          .toLowerCase()
+          .includes(author.toLowerCase());
       const titleMatch =
         !title.trim() ||
         [book.title, book.subtitle]
@@ -224,12 +227,12 @@ export default function TransactionPage() {
                             >
                               {book.title}
                             </Typography>
-                            {book.author && (
+                            {formatAuthors(book.authors) && (
                               <Typography
                                 variant="body2"
                                 color="text.secondary"
                               >
-                                {book.author}
+                                {formatAuthors(book.authors)}
                               </Typography>
                             )}
                           </Box>

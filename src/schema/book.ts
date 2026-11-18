@@ -33,7 +33,7 @@ export const validateBookForm = (values: {
 
 export const createBookSchema: Schema<CreateBookParams> = object({
   title: string().required("Title is required"),
-  author: string().optional(),
+  authors: array().of(string().default("")).optional(),
   isbn: string()
     .optional()
     .nullable()
@@ -90,7 +90,7 @@ export const createBookSchema: Schema<CreateBookParams> = object({
 
 export const editBookSchema: Schema<EditBookParams> = object({
   title: string().required("Title is required"),
-  author: string().optional(),
+  authors: array().of(string().default("")).optional(),
   isbn: string()
     .optional()
     .nullable()

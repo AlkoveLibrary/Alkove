@@ -61,7 +61,11 @@ export const ChangeMfaDialog: React.FC<{
           onClick={() => handleSetMfaEnabled(!mfaEnabled)}
           disabled={changingMfa}
         >
-          {changingMfa ? "Saving..." : mfaEnabled ? "Disable MFA" : "Enable MFA"}
+          {changingMfa
+            ? "Saving..."
+            : mfaEnabled
+              ? "Disable MFA"
+              : "Enable MFA"}
         </Button>
       </DialogActions>
     </Dialog>

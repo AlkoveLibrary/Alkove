@@ -29,6 +29,7 @@ import { CopyItem } from "components/CopyItem";
 import { BookDetailsTable } from "components/BookDetailsTable";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { formatAuthors } from "util/format-authors";
 
 export default function BookDetailPage() {
   const [coverDialogOpen, setCoverDialogOpen] = useState(false);
@@ -252,9 +253,9 @@ export default function BookDetailPage() {
                   mb: 2.5,
                 }}
               >
-                {book.author ? (
+                {formatAuthors(book.authors) ? (
                   <Typography variant="h6" color="text.secondary">
-                    {book.author}
+                    {formatAuthors(book.authors)}
                   </Typography>
                 ) : (
                   <Box />

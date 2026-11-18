@@ -13,10 +13,7 @@ import {
 import { getCopyById } from "backend/copy";
 import { getUserById } from "backend/user";
 import { validateBody } from "util/validate-body";
-import {
-  cancelHoldSchema,
-  createTransactionSchema,
-} from "schema/transaction";
+import { cancelHoldSchema, createTransactionSchema } from "schema/transaction";
 import { ErrorType } from "constants/errors";
 import { createEventLog } from "util/create-event-log";
 import { EventAction } from "@prisma/client";

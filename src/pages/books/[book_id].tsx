@@ -24,6 +24,7 @@ import { withSnackbar } from "util/snackbar-request";
 import { cancelHoldRequest, placeHoldRequest } from "requests/copy";
 import { STAFF } from "constants/roles";
 import { PAGES } from "constants/pages";
+import { formatAuthors } from "util/format-authors";
 
 export default function BookDetailPage() {
   const router = useRouter();
@@ -120,9 +121,9 @@ export default function BookDetailPage() {
                 mb: 2.5,
               }}
             >
-              {book.author ? (
+              {formatAuthors(book.authors) ? (
                 <Typography variant="h6" color="text.secondary">
-                  {book.author}
+                  {formatAuthors(book.authors)}
                 </Typography>
               ) : (
                 <Box />

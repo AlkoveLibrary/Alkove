@@ -8,6 +8,7 @@ import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
 import { BookTitle } from "components/BookTitle";
 import { PAGES } from "constants/pages";
+import { formatAuthors } from "util/format-authors";
 
 type TransactionFull = Transaction & {
   user: User;
@@ -50,7 +51,7 @@ export default function BorrowedPage() {
       book_id: t.copy.book.book_id,
       title: t.copy.book.title,
       subtitle: t.copy.book.subtitle,
-      author: t.copy.book.author ?? "-",
+      author: formatAuthors(t.copy.book.authors) || "-",
       borrowed_by: `${t.user.first_name} ${t.user.last_name}`,
       checked_out_at: t.checked_out_at,
     }));

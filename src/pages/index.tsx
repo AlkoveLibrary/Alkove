@@ -27,6 +27,7 @@ import {
 import { PAGES } from "constants/pages";
 import Head from "next/head";
 import Image from "next/image";
+import { cleanAuthors, formatAuthors } from "util/format-authors";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
 import useSWR from "swr";
@@ -63,7 +64,7 @@ export default function HomePage() {
   }, [data]);
 
   const authorCount = useMemo(
-    () => new Set(books.filter((b) => b.author).map((b) => b.author)).size,
+    () => new Set(books.flatMap((b) => cleanAuthors(b.authors))).size,
     [books],
   );
 
@@ -76,7 +77,7 @@ export default function HomePage() {
           .filter(Boolean)
           .join(": ")
           .toLowerCase()
-          .includes(q) || (book.author ?? "").toLowerCase().includes(q),
+          .includes(q) || formatAuthors(book.authors).toLowerCase().includes(q),
     );
   }, [books, query]);
 
@@ -283,7 +284,7 @@ export default function HomePage() {
                               color="text.secondary"
                               noWrap
                             >
-                              {book.author ?? "Unknown author"}
+                              {formatAuthors(book.authors) || "Unknown author"}
                             </Typography>
                           </Box>
                         </Box>

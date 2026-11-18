@@ -21,6 +21,7 @@ import { createTransactionSchema } from "schema/transaction";
 import { validateBody } from "util/validate-body";
 import { createEventLog } from "util/create-event-log";
 import { EventAction } from "@prisma/client";
+import { formatAuthors } from "util/format-authors";
 
 export default requestHandler({
   get: async (req) => {
@@ -114,7 +115,7 @@ export default requestHandler({
       const html = CHECK_OUT_EMAIL_TEMPLATE(
         book.title,
         checkoutDate,
-        book.author || undefined,
+        formatAuthors(book.authors) || undefined,
       );
 
       // Fire and forget the email sending, but log any errors internally

@@ -25,6 +25,7 @@ import { enqueueSnackbar } from "notistack";
 import { scrollToTop } from "util/scroll-to-top";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
+import { cleanAuthors } from "util/format-authors";
 
 export default function CreateBook() {
   const router = useRouter();
@@ -110,6 +111,7 @@ export default function CreateBook() {
       const { no_isbn, ...bookValues } = values;
       const nulledValues = {
         ...bookValues,
+        authors: cleanAuthors(bookValues.authors),
         isbn: no_isbn ? undefined : bookValues.isbn,
         cover_id: values.cover_id || undefined,
         // Removing the cover sets cover_id to "", undefined means it hasn't loaded yet
@@ -202,9 +204,7 @@ export default function CreateBook() {
                       initialValues={{
                         title: selectedEdition.title,
                         subtitle: selectedEdition.subtitle ?? "",
-                        author: work?.author?.length
-                          ? work.author.join(", ")
-                          : "",
+                        authors: cleanAuthors(work?.author),
                         isbn: selectedEdition.isbn,
                         publication_year: selectedEdition.publication_year,
                         format: selectedEdition.format ?? "",
@@ -249,7 +249,7 @@ export default function CreateBook() {
                 initialValues={{
                   title: "",
                   subtitle: "",
-                  author: "",
+                  authors: [],
                   isbn: isbn,
                   publication_year: undefined,
                   format: "",

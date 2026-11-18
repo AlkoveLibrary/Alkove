@@ -10,6 +10,7 @@ import { editBookSchema } from "schema/book";
 import { createEventLog } from "util/create-event-log";
 import { sanitizeIsbn } from "util/validate-isbn";
 import { EventAction } from "@prisma/client";
+import { cleanAuthors } from "util/format-authors";
 
 export default requestHandler({
   post: async (req) => {
@@ -32,7 +33,7 @@ export default requestHandler({
     const updatedBook = await updateBook(bookId, {
       title: body.title,
       subtitle: body.subtitle || null,
-      author: body.author,
+      authors: cleanAuthors(body.authors),
       // Store a blank ISBN as null so it does not collide on the unique index
       isbn: isbn || null,
       publication_year: body.publication_year,

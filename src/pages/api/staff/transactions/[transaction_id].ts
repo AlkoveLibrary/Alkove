@@ -9,6 +9,7 @@ import { sendMailWithLog } from "util/mail-with-log";
 import { CHECK_IN_EMAIL_SUBJECT, CHECK_IN_EMAIL_TEMPLATE } from "config/config";
 import { createEventLog } from "util/create-event-log";
 import { EventAction } from "@prisma/client";
+import { formatAuthors } from "util/format-authors";
 
 export default requestHandler({
   get: async (req) => {
@@ -89,7 +90,7 @@ export default requestHandler({
         book.title,
         checkoutDate,
         checkinDate,
-        book.author || undefined,
+        formatAuthors(book.authors) || undefined,
       );
 
       // Fire and forget the email sending, but log any errors internally

@@ -38,7 +38,7 @@ model Book {
   book_id          String   @id @db.Uuid
   title            String
   subtitle         String?
-  author           String?
+  authors          String[] @default([])
   isbn             String?  @unique
   cover_id         String?  @unique @db.Uuid
   publication_year Int?

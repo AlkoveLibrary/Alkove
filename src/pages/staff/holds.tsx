@@ -20,6 +20,7 @@ import { staffCancelHoldRequest } from "requests/copy";
 import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
 import { BookTitle } from "components/BookTitle";
+import { formatAuthors } from "util/format-authors";
 
 type HoldFull = Transaction & {
   user: User;
@@ -97,7 +98,7 @@ export default function HoldsPage() {
     book_id: hold.copy.book.book_id,
     title: hold.copy.book.title,
     subtitle: hold.copy.book.subtitle,
-    author: hold.copy.book.author ?? "-",
+    author: formatAuthors(hold.copy.book.authors) || "-",
     held_by: `${hold.user.first_name} ${hold.user.last_name}`,
     held_at: formatDate(hold.held_at),
   }));

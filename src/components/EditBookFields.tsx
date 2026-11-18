@@ -1,15 +1,19 @@
 import {
   Alert,
+  Box,
   Button,
   Card,
   Checkbox,
   FormControlLabel,
   Grid,
   InputAdornment,
+  Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useFormikContext } from "formik";
 import { BookFormValues } from "types/book";
@@ -39,6 +43,9 @@ export const EditBookFields = ({
       const value = e.target.value;
       setFieldValue(name, value === "" ? null : Number(value));
     };
+
+  const authors = values.authors?.length ? values.authors : [""];
+  const setAuthors = (next: string[]) => setFieldValue("authors", next);
 
   return (
     <>
@@ -166,18 +173,59 @@ export const EditBookFields = ({
             />
           </Grid>
           <Grid size={12}>
-            <TextField
-              name={"author"}
-              label={"Author"}
-              value={values.author}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              error={touched.author && !!errors.author}
-              helperText={touched.author && errors.author}
-              variant="outlined"
-              size="small"
-              fullWidth
-            />
+            <Stack spacing={1}>
+              {authors.map((author, index) => (
+                <Box
+                  key={index}
+                  sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                >
+                  <TextField
+                    name={`authors.${index}`}
+                    label={
+                      authors.length > 1 ? `Author ${index + 1}` : "Author"
+                    }
+                    value={author}
+                    onChange={(e) =>
+                      setAuthors(
+                        authors.map((existing, i) =>
+                          i === index ? e.target.value : existing,
+                        ),
+                      )
+                    }
+                    onBlur={handleBlur}
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                  />
+                  <Button
+                    size="small"
+                    startIcon={<AddIcon />}
+                    onClick={() =>
+                      setAuthors([
+                        ...authors.slice(0, index + 1),
+                        "",
+                        ...authors.slice(index + 1),
+                      ])
+                    }
+                    sx={{ flexShrink: 0, whiteSpace: "nowrap" }}
+                  >
+                    Add
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    startIcon={<CloseIcon />}
+                    disabled={authors.length === 1 && author === ""}
+                    onClick={() =>
+                      setAuthors(authors.filter((_, i) => i !== index))
+                    }
+                    sx={{ flexShrink: 0, whiteSpace: "nowrap" }}
+                  >
+                    Remove
+                  </Button>
+                </Box>
+              ))}
+            </Stack>
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <TextField

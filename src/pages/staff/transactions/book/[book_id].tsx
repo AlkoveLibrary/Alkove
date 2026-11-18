@@ -33,6 +33,7 @@ import Head from "next/head";
 import { LIBRARY_NAME } from "config/config";
 import { formatDate } from "util/format-date";
 import { staffPlaceHoldRequest } from "requests/copy";
+import { formatAuthors } from "util/format-authors";
 
 type CopyWithTransaction = Copy & {
   Transaction: (Transaction & { user: User })[];
@@ -541,9 +542,9 @@ export default function BookDetailPage() {
                   {book.subtitle}
                 </Typography>
               )}
-              {book.author && (
+              {formatAuthors(book.authors) && (
                 <Typography variant="body1" color="text.secondary">
-                  {book.author}
+                  {formatAuthors(book.authors)}
                 </Typography>
               )}
               <Chip
@@ -586,9 +587,9 @@ export default function BookDetailPage() {
                   {book.subtitle}
                 </Typography>
               )}
-              {book.author && (
+              {formatAuthors(book.authors) && (
                 <Typography variant="body1" color="text.secondary">
-                  {book.author}
+                  {formatAuthors(book.authors)}
                 </Typography>
               )}
               <Chip
